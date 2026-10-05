@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "400 Bad Request",
+    "message": "Please enter a valid date in ISO8601 format 'YYYY-MM-DD' i.e. .../intensity/date/2017-08-25"
+  }
+}
