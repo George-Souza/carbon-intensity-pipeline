@@ -15,6 +15,23 @@ This starts PostgreSQL and, once it reports healthy, runs the `migrate` service,
 every file in `sql/` (in order) and records applied versions in `schema_migrations`. Re-running
 `docker compose up` is safe — already-applied migrations are skipped.
 
+## Collecting data
+
+```bash
+# Last 60 days, ending yesterday (UTC). Days already collected are skipped.
+docker compose run --rm migrate python -m src.extract --mode backfill
+
+# Explicit window; --force re-fetches days that were already collected.
+docker compose run --rm migrate python -m src.extract --mode backfill --start 2026-08-07 --end 2026-10-05 --force
+
+# Last 24h, re-fetched on purpose so `actual` values that arrive late get filled in.
+docker compose run --rm migrate python -m src.extract --mode incremental
+```
+
+Each run is recorded in `ingestion_runs` (`success`, `partial` or `failed`). Raw API responses
+are stored in `raw_api_responses`. Transformation and loading into `carbon_intensity_halfhourly`
+come next.
+
 ## Local development
 
 ```bash
